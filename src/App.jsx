@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Trash2, ArrowUp } from "lucide-react"; // Only safe imports
 
 // PAGES
 import Collectibles from "./pages/Collectibles"; 
@@ -18,6 +18,10 @@ function CartSidebar({ isOpen, onClose, cart, setCart, whatsappNumber }) {
     
     const message = `Enquiry from Figure234:%0A${itemList}%0A%0ATotal: ₦${totalPrice.toLocaleString()}`;
     window.open(`https://wa.me/${whatsappNumber}?text=${message}`, '_blank');
+  };
+
+  const handleRemove = (indexToRemove) => {
+    setCart(cart.filter((_, index) => index !== indexToRemove));
   };
 
   return (
@@ -45,13 +49,17 @@ function CartSidebar({ isOpen, onClose, cart, setCart, whatsappNumber }) {
             </div>
             <div className="flex-grow overflow-y-auto space-y-6">
               {cart.map((item, idx) => (
-                <div key={idx} className="flex gap-4 border-b border-white/5 pb-4">
-                  <img src={item.img} className="w-16 h-20 object-cover grayscale" alt={item.name} />
-                  <div className="uppercase">
+                <div key={idx} className="flex gap-4 border-b border-white/5 pb-4 items-center">
+                  <img src={item.img} className="w-16 h-20 object-cover" alt={item.name} />
+                  <div className="uppercase flex-grow">
                     <h4 className="text-[10px] font-bold text-white">{item.name}</h4>
                     <p className="text-[8px] text-[#D4AF37]">{item.selectedHeight} / {item.selectedColor}</p>
                     <p className="text-[10px] text-gray-500 mt-1">₦{item.price.toLocaleString()}</p>
                   </div>
+                  {/* Delete Button */}
+                  <button onClick={() => handleRemove(idx)} className="text-gray-500 hover:text-red-500 transition-colors">
+                    <Trash2 size={16} />
+                  </button>
                 </div>
               ))}
             </div>
@@ -75,16 +83,33 @@ function App() {
   const [cart, setCart] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showBackToTop, setShowBackToTop] = useState(false);
   const whatsappNumber = "2348077778313"; 
 
-  // Prevent background scroll when menu is open
   useEffect(() => {
     document.body.style.overflow = isMenuOpen ? 'hidden' : 'unset';
   }, [isMenuOpen]);
 
+  // Handle scroll visibility for Back to Top
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 400 && view === "collectibles") {
+        setShowBackToTop(true);
+      } else {
+        setShowBackToTop(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [view]);
+
   const handleAddToCart = (item) => {
     setCart([...cart, item]);
     setIsCartOpen(true);
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -133,7 +158,6 @@ function App() {
           </p>
         </div>
         
-        {/* DESKTOP NAV */}
         <div className="hidden md:flex items-center space-x-10 text-[11px] font-black uppercase tracking-tight text-gray-400">
           <button onClick={() => setView("collectibles")} className={`hover:text-white ${view === 'collectibles' ? 'text-white' : ''}`}>Collections</button>
           <button onClick={() => setView("history")} className={`hover:text-white ${view === 'history' ? 'text-white' : ''}`}>Archive</button>
@@ -149,7 +173,6 @@ function App() {
           </button>
         </div>
 
-        {/* MOBILE TRIGGER */}
         <div className="md:hidden flex items-center gap-6">
           <button onClick={() => setIsCartOpen(true)} className="text-white uppercase text-[10px] font-black tracking-widest">
             Bag ({cart.length})
@@ -193,6 +216,16 @@ function App() {
         </AnimatePresence>
       </main>
 
+      {/* Back to Top Button */}
+      {showBackToTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-10 right-10 bg-[#D4AF37] text-black p-3 rounded-full shadow-lg hover:bg-white transition-colors"
+        >
+          <ArrowUp size={16} />
+        </button>
+      )}
+
       <CartSidebar 
         isOpen={isCartOpen} 
         onClose={() => setIsCartOpen(false)} 
@@ -201,14 +234,35 @@ function App() {
         whatsappNumber={whatsappNumber} 
       />
       
-      <footer className="bg-black border-t border-white/5 px-8 py-10">
+      {/* FOOTER */}
+      <footer className="bg-black border-t border-white/5 px-8 py-10 mt-auto">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-[8px] text-gray-600 uppercase tracking-[0.4em]">
+          
+          {/* Copyright - Left on Desktop, Center on Mobile */}
+          <p className="text-[8px] text-gray-600 uppercase tracking-[0.4em] text-center md:text-left">
             &copy; 2026 FIGURE234. ALL RIGHTS RESERVED.
           </p>
-          <p className="text-[8px] text-gray-600 uppercase tracking-[0.4em]">
-            DESIGNED BY JACKSON.
-          </p>
+          
+          {/* Social Icons - Right on Desktop, Center on Mobile */}
+          <div className="flex items-center justify-center gap-8">
+            <a 
+              href="https://www.instagram.com/figure234.ng/" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-gray-400 hover:text-[#D4AF37] transition-all duration-300 text-lg"
+            >
+              <i className="fa-brands fa-instagram"></i>
+            </a>
+            <a 
+              href="https://wa.me/2348077778313" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-gray-400 hover:text-[#D4AF37] transition-all duration-300 text-lg"
+            >
+              <i className="fa-brands fa-whatsapp"></i>
+            </a>
+          </div>
+
         </div>
       </footer>
     </div>
