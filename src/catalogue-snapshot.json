@@ -1,0 +1,65 @@
+{
+  "updatedAt": "2026-10-30",
+  "products": [
+    {
+      "id": "bd6c70b8-20a2-4c0e-b989-fab8583c013d",
+      "name": "Kaws Share",
+      "price": 90000,
+      "section": "premium",
+      "heights": [
+        "32cm"
+      ],
+      "colors": [
+        "brown",
+        "black",
+        "grey"
+      ],
+      "editorial": "kaws-share"
+    },
+    {
+      "id": "b4115930-e4e3-4381-8f2a-ca63be9fa14e",
+      "name": "Kaws Passing Through",
+      "price": 80000,
+      "section": "characters",
+      "heights": [
+        "28cm"
+      ],
+      "colors": [
+        "brown",
+        "black",
+        "grey"
+      ],
+      "editorial": "kaws-passing-through"
+    },
+    {
+      "id": "69f35a86-0f2d-4f07-a879-4bd3076202c1",
+      "name": "Kaws cash",
+      "price": 85000,
+      "section": "characters",
+      "heights": [
+        "30cm"
+      ],
+      "colors": [
+        "brown",
+        "grey",
+        "black"
+      ],
+      "editorial": "kaws-cash"
+    },
+    {
+      "id": "f565bf39-2e47-40c3-91e9-f4406383d72f",
+      "name": "Kaws Small Lie",
+      "price": 75000,
+      "section": "premium",
+      "heights": [
+        "28cm"
+      ],
+      "colors": [
+        "grey",
+        "brown",
+        "black"
+      ],
+      "editorial": "kaws-small-lie"
+    }
+  ]
+}

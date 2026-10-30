@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "catalogue:snapshot": "node scripts/update-catalogue.mjs"
   },
   "dependencies": {
     "@sanity/client": "^7.20.0",
